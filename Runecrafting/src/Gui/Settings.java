@@ -1,4 +1,4 @@
-package Runecrafting;
+package Gui;
 
 import RunecraftingAltar.Altar;
 
