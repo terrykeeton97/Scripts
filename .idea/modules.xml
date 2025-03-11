@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Agility/Agility.iml" filepath="$PROJECT_DIR$/Agility/Agility.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Fishing/Fishing.iml" filepath="$PROJECT_DIR$/Fishing/Fishing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Magic/Magic.iml" filepath="$PROJECT_DIR$/Magic/Magic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Mining/Mining.iml" filepath="$PROJECT_DIR$/Mining/Mining.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Runecrafting/Runecrafting.iml" filepath="$PROJECT_DIR$/Runecrafting/Runecrafting.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Scripts.iml" filepath="$PROJECT_DIR$/Scripts.iml" />
+    </modules>
+  </component>
+</project>
