@@ -1,6 +1,7 @@
 package RunecraftingAltar.Fire;
 
 import Runecrafting.Runecraft;
+import com.osmb.api.item.ItemID;
 import com.osmb.api.location.area.Area;
 import com.osmb.api.visual.drawing.Canvas;
 
@@ -21,12 +22,17 @@ public class Altar implements RunecraftingAltar.Altar {
     }
 
     @Override
-    public String name() {
-        return "Fire Altar";
+    public void onPaint(Canvas gc) {
+
     }
 
     @Override
-    public void onPaint(Canvas gc) {
+    public int getRuneItemId() {
+        return ItemID.FIRE_RUNE;
+    }
 
+    @Override
+    public String getAltarName() {
+        return "Fire Altar";
     }
 }

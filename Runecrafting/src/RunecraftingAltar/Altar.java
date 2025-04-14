@@ -11,7 +11,9 @@ public interface Altar {
 
     int[] regions();
 
-    String name();
-
     void onPaint(Canvas gc);
+
+    int getRuneItemId();
+
+    String getAltarName();
 }

@@ -1,43 +1,123 @@
 package Gui;
 
-import RunecraftingAltar.Earth.Altar;
 import com.osmb.api.ScriptCore;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
+import com.osmb.api.item.ItemID;
+import com.osmb.api.javafx.JavaFXUtils;
+import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
 
-public class Gui {
+import java.util.List;
 
-    public void buildScene(ScriptCore core) {
-        var vBox = new VBox();
-        var selectAltar = new HBox();
-        var selectAltarLabel = new Label("Select Altar");
-        var selectAltarComboBox = new ComboBox<RunecraftingAltar.Altar>();
-        
-        vBox.setStyle("-fx-background-color: #636E72; -fx-padding: 10");
-        selectAltar.setSpacing(10);
-        selectAltar.setAlignment(Pos.CENTER_LEFT);
-        selectAltarComboBox.getItems().addAll(new RunecraftingAltar.Air.Altar(), new RunecraftingAltar.Water.Altar(), new Altar(), new RunecraftingAltar.Fire.Altar());
-        selectAltarComboBox.setConverter(new StringConverter<>() {
+public class Gui extends BorderPane {
+
+    private final ComboBox<RunecraftingAltar.Altar> altarComboBox;
+    private final CheckBox useShortcutsCheckBox = new CheckBox("Use shortcuts");
+
+    public Gui(ScriptCore core) {
+        setPadding(new Insets(10));
+
+        Label label = new Label("Select Altar:");
+
+        altarComboBox = new ComboBox<>(FXCollections.observableArrayList(getAltars()));
+        altarComboBox.setPrefWidth(250);
+
+        useShortcutsCheckBox.setVisible(false);
+        altarComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            useShortcutsCheckBox.setVisible(newVal instanceof RunecraftingAltar.Blood.Altar);
+        });
+
+        VBox mainVBox = new VBox(label, altarComboBox, useShortcutsCheckBox);
+        mainVBox.setStyle("-fx-spacing: 5; -fx-padding: 10; -fx-background-color: #636E72");
+        mainVBox.setPadding(new Insets(10));
+        mainVBox.getStyleClass().add("script-manager-titled-pane");
+        mainVBox.setMaxHeight(Double.MAX_VALUE);
+        setCenter(mainVBox);
+        VBox.setVgrow(mainVBox, Priority.ALWAYS);
+
+        altarComboBox.setCellFactory(param -> new ListCell<>() {
             @Override
-            public String toString(RunecraftingAltar.Altar altar) {
-                return altar != null ? altar.name() : "";
-            }
-
-            @Override
-            public RunecraftingAltar.Altar fromString(String string) {
-                return selectAltarComboBox.getItems().stream().filter(course -> course.name().equals(string)).findFirst().orElse(null);
+            protected void updateItem(RunecraftingAltar.Altar altar, boolean empty) {
+                super.updateItem(altar, empty);
+                if (empty || altar == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(altar.getAltarName());
+                    ImageView imageView = JavaFXUtils.getItemImageView(core, altar.getRuneItemId());
+                    imageView.setFitHeight(35);
+                    imageView.setFitWidth(35);
+                    setGraphic(imageView);
+                }
             }
         });
 
-        selectAltar.getChildren().addAll(selectAltarLabel, selectAltarComboBox);
-        vBox.getChildren().add(selectAltarComboBox);
+        // Set custom rendering for the selected item
+        altarComboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(RunecraftingAltar.Altar altar, boolean empty) {
+                super.updateItem(altar, empty);
+                if (empty || altar == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(altar.getAltarName());
+                    ImageView imageView = JavaFXUtils.getItemImageView(core, altar.getRuneItemId());
+                    imageView.setFitHeight(16);
+                    imageView.setFitWidth(16);
+                    setGraphic(imageView);
+                }
+            }
+        });
 
-        new Scene(vBox);
+        altarComboBox.setPrefWidth(250);
+
+        var startButton = new Button("Start");
+        startButton.setOnAction(e -> {
+            RunecraftingAltar.Altar selected = altarComboBox.getValue();
+            if (selected != null) {
+                System.out.println("Starting script with altar: " + selected.getAltarName());
+                // Your script logic here
+            }
+            ((Stage) startButton.getScene().getWindow()).close();
+        });
+
+        HBox bottomHBox = new HBox(startButton);
+        bottomHBox.setPadding(new Insets(10));
+        bottomHBox.setStyle("-fx-alignment: center-right; -fx-background-color: #3C3C3C;");
+        setBottom(bottomHBox);
     }
-    
+
+    private List<RunecraftingAltar.Altar> getAltars () {
+        var airAltar = new RunecraftingAltar.Air.Altar();
+        var waterAltar = new RunecraftingAltar.Water.Altar();
+        var earthAltar = new RunecraftingAltar.Earth.Altar();
+        var fireAltar = new RunecraftingAltar.Fire.Altar();
+        var bloodAltar = new RunecraftingAltar.Blood.Altar();
+        var soulAltar = new RunecraftingAltar.Soul.Altar();
+        var lavaAltar = new RunecraftingAltar.Lava.Altar();
+        var zmiAltar = new RunecraftingAltar.Zmi.Altar();
+
+        return List.of(
+                airAltar,
+                waterAltar,
+                earthAltar,
+                fireAltar,
+                bloodAltar,
+                soulAltar,
+                lavaAltar,
+                zmiAltar
+        );
+    }
+
+    public boolean useShortcuts() {
+        return useShortcutsCheckBox.isSelected();
+    }
+
+    public RunecraftingAltar.Altar getSelectedAltar() {
+        return altarComboBox.getValue();
+    }
 }

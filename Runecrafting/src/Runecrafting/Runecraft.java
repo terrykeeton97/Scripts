@@ -9,6 +9,7 @@ import com.osmb.api.trackers.experiencetracker.XPTracker;
 import com.osmb.api.ui.GameState;
 import com.osmb.api.visual.drawing.Canvas;
 import com.osmb.api.visual.image.ImageImport;
+import javafx.scene.Scene;
 
 import java.util.Map;
 import java.util.Set;
@@ -57,10 +58,18 @@ public class Runecraft extends Script {
 
     @Override
     public void onStart() {
-        
-        var gui = new Gui();
-        gui.buildScene(this);
-        
+        var gui = new Gui(this);
+        var scene = new Scene(gui);
+        scene.getStylesheets().add("style.css");
+        getStageController().show(scene, "Settings", false);
+
+        var altar = gui.getSelectedAltar();
+        if (altar != null) {
+            if (altar instanceof RunecraftingAltar.Blood.Altar) {
+                log("[BLOOD RUNECRAFTER] - Blood Altar starting...");
+                altar.poll(this);
+            }
+        }
         super.onStart();
     }
 
