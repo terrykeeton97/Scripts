@@ -66,7 +66,6 @@ public class Runecraft extends Script {
         var altar = gui.getSelectedAltar();
         if (altar != null) {
             if (altar instanceof RunecraftingAltar.Blood.Altar) {
-                log("[BLOOD RUNECRAFTER] - Blood Altar starting...");
                 altar.poll(this);
             }
         }
