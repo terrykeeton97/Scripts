@@ -1,13 +1,15 @@
 package Gui;
 
 import com.osmb.api.ScriptCore;
-import com.osmb.api.item.ItemID;
 import com.osmb.api.javafx.JavaFXUtils;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.List;
@@ -55,7 +57,6 @@ public class Gui extends BorderPane {
             }
         });
 
-        // Set custom rendering for the selected item
         altarComboBox.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(RunecraftingAltar.Altar altar, boolean empty) {
@@ -79,8 +80,7 @@ public class Gui extends BorderPane {
         startButton.setOnAction(e -> {
             RunecraftingAltar.Altar selected = altarComboBox.getValue();
             if (selected != null) {
-                System.out.println("Starting script with altar: " + selected.getAltarName());
-                // Your script logic here
+                core.log("Starting " + selected.getAltarName());
             }
             ((Stage) startButton.getScene().getWindow()).close();
         });
