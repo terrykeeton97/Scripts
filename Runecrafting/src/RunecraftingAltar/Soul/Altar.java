@@ -1,8 +1,10 @@
 package RunecraftingAltar.Soul;
 
 import Runecrafting.Runecraft;
+import com.osmb.api.ScriptCore;
 import com.osmb.api.item.ItemID;
 import com.osmb.api.location.area.Area;
+import com.osmb.api.scene.RSObject;
 import com.osmb.api.visual.drawing.Canvas;
 
 public class Altar implements RunecraftingAltar.Altar {
@@ -12,7 +14,12 @@ public class Altar implements RunecraftingAltar.Altar {
     }
 
     @Override
-    public Area getBankArea() {
+    public Area getArea() {
+        return null;
+    }
+
+    @Override
+    public RSObject getAltar(ScriptCore core) {
         return null;
     }
 

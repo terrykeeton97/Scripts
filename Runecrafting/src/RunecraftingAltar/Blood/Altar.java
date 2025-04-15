@@ -1,12 +1,12 @@
 package RunecraftingAltar.Blood;
 
 import Runecrafting.Runecraft;
+import com.osmb.api.ScriptCore;
 import com.osmb.api.item.ItemID;
 import com.osmb.api.location.area.Area;
 import com.osmb.api.location.area.impl.RectangleArea;
 import com.osmb.api.location.position.types.WorldPosition;
-import com.osmb.api.item.ItemSearchResult;
-import com.osmb.api.utils.UIResultList;
+import com.osmb.api.scene.RSObject;
 import com.osmb.api.visual.drawing.Canvas;
 
 public class Altar implements RunecraftingAltar.Altar {
@@ -22,21 +22,19 @@ public class Altar implements RunecraftingAltar.Altar {
     public int poll(Runecraft core) {
         var worldPosition = core.getWorldPosition();
         if (START_AREA.contains(worldPosition)) {
-            core.log("[BLOOD RUNECRAFTER] - At start area");
-            var inventory = core.getWidgetManager().getInventory();
-
-            if (!core.getWidgetManager().getInventory().isOpen()) {
-                core.log("[BLOOD RUNECRAFTER] - Opening inventory");
-                inventory.open();
-
-            }
-            return 0;
+            Runecraft.handleAltar(this);
         }
+
         return 0;
     }
 
     @Override
-    public Area getBankArea() {
+    public Area getArea() {
+        return null;
+    }
+
+    @Override
+    public RSObject getAltar(ScriptCore core) {
         return null;
     }
 

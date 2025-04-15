@@ -1,6 +1,8 @@
 package Runecrafting;
 
 import Gui.Gui;
+import RunecraftingAltar.Altar;
+import com.osmb.api.scene.RSObject;
 import com.osmb.api.script.Script;
 import com.osmb.api.script.ScriptDefinition;
 import com.osmb.api.script.SkillCategory;
@@ -65,9 +67,7 @@ public class Runecraft extends Script {
 
         var altar = gui.getSelectedAltar();
         if (altar != null) {
-            if (altar instanceof RunecraftingAltar.Blood.Altar) {
-                altar.poll(this);
-            }
+            altar.poll(this);
         }
         super.onStart();
     }
@@ -86,4 +86,47 @@ public class Runecraft extends Script {
     public int[] regionsToPrioritise() {
         return super.regionsToPrioritise();
     }
+
+    public void handleAltar(Altar altar) {
+        var worldPosition = getWorldPosition();
+
+        if (!altar.getArea().contains(worldPosition)) {
+            traverseToAltar();
+            return;
+        }
+
+        RSObject altarObject = altar.getAltar(this);
+        if (!altarObject.isInteractableOnScreen()) {
+            log("Altar is not interactable on screen, walking closer");
+            walkCloserToAltar();
+            return;
+        }
+
+        interactWithAltar(altarObject);
+    }
+
+    private void traverseToAltar() {
+        log("Traversing to altar...");
+    }
+
+    private void walkCloserToAltar() {
+        log("Moving closer to the altar...");
+    }
+
+    private void interactWithAltar(RSObject altarObject) {
+        var altarPoly = altarObject.getConvexHull();
+
+        if (altarPoly == null) {
+            log("Altar polygon is null");
+            return;
+        }
+
+        if (!getFinger().tap(altarPoly, "Use")) {
+            log("Failed to interact with the altar");
+            return;
+        }
+
+        log("Interacted with the altar successfully");
+    }
+
 }
