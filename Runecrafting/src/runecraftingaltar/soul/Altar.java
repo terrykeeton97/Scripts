@@ -1,18 +1,25 @@
-package RunecraftingAltar.Zmi;
+package runecraftingaltar.soul;
 
-import Runecrafting.Runecraft;
+import runecrafting.Runecraft;
+import com.osmb.api.ScriptCore;
 import com.osmb.api.item.ItemID;
 import com.osmb.api.location.area.Area;
+import com.osmb.api.scene.RSObject;
 import com.osmb.api.visual.drawing.Canvas;
 
-public class Altar implements RunecraftingAltar.Altar {
+public class Altar implements runecraftingaltar.Altar {
     @Override
     public int poll(Runecraft core) {
         return 0;
     }
 
     @Override
-    public Area getBankArea() {
+    public Area getArea() {
+        return null;
+    }
+
+    @Override
+    public RSObject getAltar(ScriptCore core) {
         return null;
     }
 
@@ -28,11 +35,11 @@ public class Altar implements RunecraftingAltar.Altar {
 
     @Override
     public int getRuneItemId() {
-        return ItemID.FIRE_BATTLESTAFF;
+        return ItemID.SOUL_RUNE;
     }
 
     @Override
     public String getAltarName() {
-        return "Zmi Altar";
+        return "Soul Altar";
     }
 }

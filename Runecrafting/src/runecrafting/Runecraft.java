@@ -1,6 +1,8 @@
-package Runecrafting;
+package runecrafting;
 
-import Gui.Gui;
+import gui.Gui;
+import runecraftingaltar.Altar;
+import com.osmb.api.scene.RSObject;
 import com.osmb.api.script.Script;
 import com.osmb.api.script.ScriptDefinition;
 import com.osmb.api.script.SkillCategory;
@@ -65,10 +67,7 @@ public class Runecraft extends Script {
 
         var altar = gui.getSelectedAltar();
         if (altar != null) {
-            if (altar instanceof RunecraftingAltar.Blood.Altar) {
-                log("[BLOOD RUNECRAFTER] - Blood Altar starting...");
-                altar.poll(this);
-            }
+            altar.poll(this);
         }
         super.onStart();
     }
@@ -87,4 +86,62 @@ public class Runecraft extends Script {
     public int[] regionsToPrioritise() {
         return super.regionsToPrioritise();
     }
+
+    public void handleAltar(Altar altar) {
+        var worldPosition = getWorldPosition();
+
+        if (!altar.getArea().contains(worldPosition)) {
+            if (altar instanceof runecraftingaltar.blood.Altar) {
+                walkToDarkAltar();
+                interactWithDarkAltar(altar);
+            }
+            traverseToAltar();
+            return;
+        }
+
+        RSObject altarObject = altar.getAltar(this);
+        if (!altarObject.isInteractableOnScreen()) {
+            log("Altar is not interactable on screen, walking closer");
+            walkCloserToAltar();
+            return;
+        }
+
+        interactWithAltar(altar);
+
+        //Walk to bank or start point
+    }
+
+    private void traverseToAltar() {
+        log("Traversing to altar...");
+    }
+
+    private void walkCloserToAltar() {
+        log("Moving closer to the altar...");
+    }
+
+    private void walkToDarkAltar() {
+        log("Walking to dark altar...");
+    }
+
+    private void interactWithDarkAltar(Altar altar) {
+        log("Interacting with dark altar...");
+    }
+
+    private void interactWithAltar(Altar altar) {
+        var altarObject = altar.getAltar(this);
+        var altarPoly = altarObject.getConvexHull();
+
+        if (altarPoly == null) {
+            log("Altar polygon is null");
+            return;
+        }
+
+        if (!getFinger().tap(altarPoly, "Use")) {
+            log("Failed to interact with the altar");
+            return;
+        }
+
+        log("Interacted with the altar successfully");
+    }
+
 }
