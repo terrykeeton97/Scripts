@@ -1,6 +1,6 @@
-package RunecraftingAltar;
+package runecraftingaltar;
 
-import Runecrafting.Runecraft;
+import runecrafting.Runecraft;
 import com.osmb.api.ScriptCore;
 import com.osmb.api.location.area.Area;
 import com.osmb.api.scene.RSObject;

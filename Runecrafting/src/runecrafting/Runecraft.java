@@ -1,7 +1,7 @@
-package Runecrafting;
+package runecrafting;
 
-import Gui.Gui;
-import RunecraftingAltar.Altar;
+import gui.Gui;
+import runecraftingaltar.Altar;
 import com.osmb.api.scene.RSObject;
 import com.osmb.api.script.Script;
 import com.osmb.api.script.ScriptDefinition;
@@ -91,6 +91,10 @@ public class Runecraft extends Script {
         var worldPosition = getWorldPosition();
 
         if (!altar.getArea().contains(worldPosition)) {
+            if (altar instanceof runecraftingaltar.blood.Altar) {
+                walkToDarkAltar();
+                interactWithDarkAltar(altar);
+            }
             traverseToAltar();
             return;
         }
@@ -102,7 +106,9 @@ public class Runecraft extends Script {
             return;
         }
 
-        interactWithAltar(altarObject);
+        interactWithAltar(altar);
+
+        //Walk to bank or start point
     }
 
     private void traverseToAltar() {
@@ -113,7 +119,16 @@ public class Runecraft extends Script {
         log("Moving closer to the altar...");
     }
 
-    private void interactWithAltar(RSObject altarObject) {
+    private void walkToDarkAltar() {
+        log("Walking to dark altar...");
+    }
+
+    private void interactWithDarkAltar(Altar altar) {
+        log("Interacting with dark altar...");
+    }
+
+    private void interactWithAltar(Altar altar) {
+        var altarObject = altar.getAltar(this);
         var altarPoly = altarObject.getConvexHull();
 
         if (altarPoly == null) {

@@ -1,4 +1,4 @@
-package Gui;
+package gui;
 
 import com.osmb.api.ScriptCore;
 import com.osmb.api.javafx.JavaFXUtils;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Gui extends BorderPane {
 
-    private final ComboBox<RunecraftingAltar.Altar> altarComboBox;
+    private final ComboBox<runecraftingaltar.Altar> altarComboBox;
     private final CheckBox useShortcutsCheckBox = new CheckBox("Use shortcuts");
 
     public Gui(ScriptCore core) {
@@ -29,7 +29,7 @@ public class Gui extends BorderPane {
 
         useShortcutsCheckBox.setVisible(false);
         altarComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
-            useShortcutsCheckBox.setVisible(newVal instanceof RunecraftingAltar.Blood.Altar);
+            useShortcutsCheckBox.setVisible(newVal instanceof runecraftingaltar.blood.Altar);
         });
 
         VBox mainVBox = new VBox(label, altarComboBox, useShortcutsCheckBox);
@@ -42,7 +42,7 @@ public class Gui extends BorderPane {
 
         altarComboBox.setCellFactory(param -> new ListCell<>() {
             @Override
-            protected void updateItem(RunecraftingAltar.Altar altar, boolean empty) {
+            protected void updateItem(runecraftingaltar.Altar altar, boolean empty) {
                 super.updateItem(altar, empty);
                 if (empty || altar == null) {
                     setText(null);
@@ -59,7 +59,7 @@ public class Gui extends BorderPane {
 
         altarComboBox.setButtonCell(new ListCell<>() {
             @Override
-            protected void updateItem(RunecraftingAltar.Altar altar, boolean empty) {
+            protected void updateItem(runecraftingaltar.Altar altar, boolean empty) {
                 super.updateItem(altar, empty);
                 if (empty || altar == null) {
                     setText(null);
@@ -78,7 +78,7 @@ public class Gui extends BorderPane {
 
         var startButton = new Button("Start");
         startButton.setOnAction(e -> {
-            RunecraftingAltar.Altar selected = altarComboBox.getValue();
+            runecraftingaltar.Altar selected = altarComboBox.getValue();
             if (selected != null) {
                 core.log("Starting " + selected.getAltarName());
             }
@@ -91,15 +91,15 @@ public class Gui extends BorderPane {
         setBottom(bottomHBox);
     }
 
-    private List<RunecraftingAltar.Altar> getAltars () {
-        var airAltar = new RunecraftingAltar.Air.Altar();
-        var waterAltar = new RunecraftingAltar.Water.Altar();
-        var earthAltar = new RunecraftingAltar.Earth.Altar();
-        var fireAltar = new RunecraftingAltar.Fire.Altar();
-        var bloodAltar = new RunecraftingAltar.Blood.Altar();
-        var soulAltar = new RunecraftingAltar.Soul.Altar();
-        var lavaAltar = new RunecraftingAltar.Lava.Altar();
-        var zmiAltar = new RunecraftingAltar.Zmi.Altar();
+    private List<runecraftingaltar.Altar> getAltars () {
+        var airAltar = new runecraftingaltar.air.Altar();
+        var waterAltar = new runecraftingaltar.water.Altar();
+        var earthAltar = new runecraftingaltar.earth.Altar();
+        var fireAltar = new runecraftingaltar.fire.Altar();
+        var bloodAltar = new runecraftingaltar.blood.Altar();
+        var soulAltar = new runecraftingaltar.soul.Altar();
+        var lavaAltar = new runecraftingaltar.lava.Altar();
+        var zmiAltar = new runecraftingaltar.zmi.Altar();
 
         return List.of(
                 airAltar,
@@ -117,7 +117,7 @@ public class Gui extends BorderPane {
         return useShortcutsCheckBox.isSelected();
     }
 
-    public RunecraftingAltar.Altar getSelectedAltar() {
+    public runecraftingaltar.Altar getSelectedAltar() {
         return altarComboBox.getValue();
     }
 }

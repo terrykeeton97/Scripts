@@ -1,6 +1,6 @@
-package RunecraftingAltar.Blood;
+package runecraftingaltar.blood;
 
-import Runecrafting.Runecraft;
+import runecrafting.Runecraft;
 import com.osmb.api.ScriptCore;
 import com.osmb.api.item.ItemID;
 import com.osmb.api.location.area.Area;
@@ -9,7 +9,7 @@ import com.osmb.api.location.position.types.WorldPosition;
 import com.osmb.api.scene.RSObject;
 import com.osmb.api.visual.drawing.Canvas;
 
-public class Altar implements RunecraftingAltar.Altar {
+public class Altar implements runecraftingaltar.Altar {
 
     private static final Area START_AREA = new RectangleArea(1757, 3842, 14, 21, 0);
     private static final Area DARK_ALTAR = new RectangleArea(1708, 3878, 14, 11, 0);
@@ -21,6 +21,7 @@ public class Altar implements RunecraftingAltar.Altar {
     @Override
     public int poll(Runecraft core) {
         var worldPosition = core.getWorldPosition();
+
         if (START_AREA.contains(worldPosition)) {
             Runecraft.handleAltar(this);
         }

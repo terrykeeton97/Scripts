@@ -1,13 +1,13 @@
-package RunecraftingAltar.Water;
+package runecraftingaltar.water;
 
-import Runecrafting.Runecraft;
+import runecrafting.Runecraft;
 import com.osmb.api.ScriptCore;
 import com.osmb.api.item.ItemID;
 import com.osmb.api.location.area.Area;
 import com.osmb.api.scene.RSObject;
 import com.osmb.api.visual.drawing.Canvas;
 
-public class Altar implements RunecraftingAltar.Altar {
+public class Altar implements runecraftingaltar.Altar {
     @Override
     public int poll(Runecraft core) {
         return 0;
