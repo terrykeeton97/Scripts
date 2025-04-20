@@ -69,6 +69,7 @@ public class Runecraft extends Script {
         if (altar != null) {
             altar.poll(this);
         }
+
         super.onStart();
     }
 
@@ -92,17 +93,17 @@ public class Runecraft extends Script {
 
         if (!altar.getArea().contains(worldPosition)) {
             if (altar instanceof runecraftingaltar.blood.Altar) {
-                walkToDarkAltar();
+                walkToDarkAltar(altar);
                 interactWithDarkAltar(altar);
             }
-            traverseToAltar();
+            traverseToAltar(altar);
             return;
         }
 
         RSObject altarObject = altar.getAltar(this);
         if (!altarObject.isInteractableOnScreen()) {
             log("Altar is not interactable on screen, walking closer");
-            walkCloserToAltar();
+            walkCloserToAltar(altar);
             return;
         }
 
@@ -111,15 +112,15 @@ public class Runecraft extends Script {
         //Walk to bank or start point
     }
 
-    private void traverseToAltar() {
+    private void traverseToAltar(Altar altar) {
         log("Traversing to altar...");
     }
 
-    private void walkCloserToAltar() {
+    private void walkCloserToAltar(Altar altar) {
         log("Moving closer to the altar...");
     }
 
-    private void walkToDarkAltar() {
+    private void walkToDarkAltar(Altar altar) {
         log("Walking to dark altar...");
     }
 

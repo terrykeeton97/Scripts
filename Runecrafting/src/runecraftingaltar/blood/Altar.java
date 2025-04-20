@@ -23,7 +23,7 @@ public class Altar implements runecraftingaltar.Altar {
         var worldPosition = core.getWorldPosition();
 
         if (START_AREA.contains(worldPosition)) {
-            Runecraft.handleAltar(this);
+            core.handleAltar(this);
         }
 
         return 0;
