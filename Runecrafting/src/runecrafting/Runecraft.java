@@ -12,20 +12,29 @@ import com.osmb.api.ui.GameState;
 import com.osmb.api.visual.drawing.Canvas;
 import com.osmb.api.visual.image.ImageImport;
 import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @ScriptDefinition(name = "TLK AIO Runecrafter", author = "tezkidd", version = 1.0, description = "AIO Runecrafter", skillCategory = SkillCategory.RUNECRAFTING)
 public class Runecraft extends Script {
    
+    private Altar selectedAltar;
+    private boolean guiInitialized = false;
+    
     public Runecraft(Object scriptCore) {
         super(scriptCore);
     }
 
     @Override
     public int poll() {
-        return 0;
+        // Only start polling the altar after the GUI has been initialized
+        if (guiInitialized && selectedAltar != null) {
+            return selectedAltar.poll(this);
+        }
+        return 1000;
     }
 
     @Override
@@ -60,16 +69,23 @@ public class Runecraft extends Script {
 
     @Override
     public void onStart() {
+        // Create the GUI
         var gui = new Gui(this);
         var scene = new Scene(gui);
         scene.getStylesheets().add("style.css");
-        getStageController().show(scene, "Settings", false);
-
-        var altar = gui.getSelectedAltar();
-        if (altar != null) {
-            altar.poll(this);
+        
+        // Show the GUI and wait for it to close
+        getStageController().show(scene, "Settings", true);  // Use blocking mode to wait for GUI to close
+        
+        // Get the selected altar after the GUI is closed
+        selectedAltar = gui.getSelectedAltar();
+        if (selectedAltar != null) {
+            log("Starting " + selectedAltar.getAltarName());
         }
-
+        
+        // Mark the GUI as initialized so polling can begin
+        guiInitialized = true;
+        
         super.onStart();
     }
 
@@ -85,6 +101,10 @@ public class Runecraft extends Script {
 
     @Override
     public int[] regionsToPrioritise() {
+        // If we have a selected altar, prioritize its regions
+        if (selectedAltar != null) {
+            return selectedAltar.regions();
+        }
         return super.regionsToPrioritise();
     }
 
@@ -92,6 +112,11 @@ public class Runecraft extends Script {
      * Handles mining dense runestone for blood runecrafting
      */
     public void handleRunestone() {
+        if (getObjectManager() == null) {
+            log("Error: ObjectManager is null");
+            return;
+        }
+        
         RSObject denseEssenceBlock = getObjectManager().getClosestObject("Dense runestone");
         if (denseEssenceBlock != null && denseEssenceBlock.isInteractableOnScreen()) {
             getFinger().tap(denseEssenceBlock.getConvexHull(), "Mine");

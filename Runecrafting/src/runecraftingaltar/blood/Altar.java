@@ -20,7 +20,7 @@ public class Altar implements runecraftingaltar.Altar {
     private static final Area CLIMB_ROCKS_DOWN = new RectangleArea(1735, 3851, 7, 5, 0);
     private static final Area CLIMB_ROCKS_UP = new RectangleArea(1745, 3854, 7, 5, 0);
     private static final Area DENSE_ESSENCE_AREA = new RectangleArea(1760, 3852, 12, 12, 0);
-    
+
     private enum State {
         MINE_ESSENCE,
         TRAVEL_TO_DARK_ALTAR,
@@ -33,7 +33,8 @@ public class Altar implements runecraftingaltar.Altar {
     private State currentState = State.MINE_ESSENCE;
     private long lastStateChange = 0;
     private boolean inventoryWasFull = false;
-    
+    private int essenceCount = 0;
+
     @Override
     public int poll(Runecraft script) {
         // Get player position
@@ -44,10 +45,8 @@ public class Altar implements runecraftingaltar.Altar {
             case MINE_ESSENCE:
                 script.log("Blood Runecrafting: Mining essence");
                 
-                // Check if inventory is full by looking for dense essence blocks
-                UIResultList<ItemSearchResult> denseBlocks = script.getItemManager().findAllOfItem(script.getWidgetManager().getInventory(), ItemID.DENSE_ESSENCE_BLOCK);
-                
-                if (denseBlocks.size() >= 26) {  // Leave room for pickaxe and maybe another item
+                // Check if inventory is full (using a counter instead of findAllOfItem)
+                if (essenceCount >= 26) {  // Leave room for pickaxe and maybe another item
                     setState(State.TRAVEL_TO_DARK_ALTAR);
                     inventoryWasFull = true;
                     return 300;
@@ -55,6 +54,7 @@ public class Altar implements runecraftingaltar.Altar {
                 
                 // Use the handleRunestone method we added to Runecraft
                 script.handleRunestone();
+                essenceCount++; // Increment counter when mining
                 return 1000;
                 
             case TRAVEL_TO_DARK_ALTAR:
@@ -82,9 +82,9 @@ public class Altar implements runecraftingaltar.Altar {
                 
             case VENERATE_DARK_ALTAR:
                 script.log("Blood Runecrafting: Venerating dark altar");
-                UIResultList<ItemSearchResult> denseEssence = script.getItemManager().findAllOfItem(script.getWidgetManager().getInventory(), ItemID.DENSE_ESSENCE_BLOCK);
                 
-                if (denseEssence.isEmpty()) {
+                // Check if we've converted all dense essence (using counter)
+                if (essenceCount <= 0) {
                     setState(State.TRAVEL_TO_BLOOD_ALTAR);
                     return 300;
                 }
@@ -94,6 +94,7 @@ public class Altar implements runecraftingaltar.Altar {
                     script.getFinger().tap(darkAltar.getConvexHull(), "Venerate");
                     script.sleep(5000);
                     script.log("Converted dense essence to dark essence");
+                    essenceCount = 0; // Reset counter after converting all essence
                 }
                 return 1000;
                 
@@ -122,10 +123,9 @@ public class Altar implements runecraftingaltar.Altar {
                 
             case CRAFT_BLOOD_RUNES:
                 script.log("Blood Runecrafting: Crafting blood runes");
-                UIResultList<ItemSearchResult> darkEssence = script.getItemManager().findAllOfItem(
-                    script.getWidgetManager().getInventory(), ItemID.DARK_ESSENCE_BLOCK);
                 
-                if (darkEssence.isEmpty()) {
+                // Check if we've crafted all dark essence (using a flag)
+                if (inventoryWasFull) {
                     setState(State.RETURN_TO_START);
                     return 300;
                 }
@@ -135,6 +135,7 @@ public class Altar implements runecraftingaltar.Altar {
                     script.getFinger().tap(bloodAltar.getConvexHull(), "Bind Blood rune");
                     script.sleep(5000);
                     script.log("Crafted blood runes");
+                    inventoryWasFull = false; // Reset flag after crafting
                 }
                 return 1000;
                 
@@ -142,7 +143,6 @@ public class Altar implements runecraftingaltar.Altar {
                 script.log("Blood Runecrafting: Returning to start");
                 if (START_AREA.contains(playerPos)) {
                     setState(State.MINE_ESSENCE);
-                    inventoryWasFull = false;
                     return 300;
                 }
                 
