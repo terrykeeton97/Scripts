@@ -88,61 +88,17 @@ public class Runecraft extends Script {
         return super.regionsToPrioritise();
     }
 
-    public void handleAltar(Altar altar) {
-        var worldPosition = getWorldPosition();
-
-        if (!altar.getArea().contains(worldPosition)) {
-            if (altar instanceof runecraftingaltar.blood.Altar) {
-                walkToDarkAltar(altar);
-                interactWithDarkAltar(altar);
-            }
-            traverseToAltar(altar);
-            return;
+    /**
+     * Handles mining dense runestone for blood runecrafting
+     */
+    public void handleRunestone() {
+        RSObject denseEssenceBlock = getObjectManager().getClosestObject("Dense runestone");
+        if (denseEssenceBlock != null && denseEssenceBlock.isInteractableOnScreen()) {
+            getFinger().tap(denseEssenceBlock.getConvexHull(), "Mine");
+            log("Mining dense essence");
+            sleep(3000);
+        } else {
+            log("Dense runestone not found or not interactable");
         }
-
-        RSObject altarObject = altar.getAltar(this);
-        if (!altarObject.isInteractableOnScreen()) {
-            log("Altar is not interactable on screen, walking closer");
-            walkCloserToAltar(altar);
-            return;
-        }
-
-        interactWithAltar(altar);
-
-        //Walk to bank or start point
     }
-
-    private void traverseToAltar(Altar altar) {
-        log("Traversing to altar...");
-    }
-
-    private void walkCloserToAltar(Altar altar) {
-        log("Moving closer to the altar...");
-    }
-
-    private void walkToDarkAltar(Altar altar) {
-        log("Walking to dark altar...");
-    }
-
-    private void interactWithDarkAltar(Altar altar) {
-        log("Interacting with dark altar...");
-    }
-
-    private void interactWithAltar(Altar altar) {
-        var altarObject = altar.getAltar(this);
-        var altarPoly = altarObject.getConvexHull();
-
-        if (altarPoly == null) {
-            log("Altar polygon is null");
-            return;
-        }
-
-        if (!getFinger().tap(altarPoly, "Use")) {
-            log("Failed to interact with the altar");
-            return;
-        }
-
-        log("Interacted with the altar successfully");
-    }
-
 }
